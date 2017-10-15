@@ -56,9 +56,6 @@ WORKDIR /opt/esp-open-sdk/esptool
 RUN wget https://raw.githubusercontent.com/nodemcu/nodemcu-firmware/master/tools/esptool.py
 RUN chmod +rx esptool.py
 
-# Tweak standlone.js conf
-RUN sed -i -e 's_127.0.0.1_0.0.0.0_g' /opt/cloud9/configs/standalone.js 
-
 # ------------------------------------------------------------------------------
 # Add supervisord configs
 ADD conf/* /etc/supervisor/conf.d/
