@@ -5,12 +5,11 @@
 FROM ubuntu
 
 # Last base packages update
-LABEL BASE_PACKAGES_UPDATE="2017-04-15"
+LABEL BASE_PACKAGES_UPDATE="2017-10-15"
 # ------------------------------------------------------------------------------
 # Install base
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get clean && apt-get update && apt-get install -y build-essential g++ curl libssl-dev apache2-utils git libxml2-dev sshfs make autoconf automake libtool gcc g++ gperf flex bison texinfo gawk ncurses-dev libexpat-dev python sed python-serial srecord bc wget llvm libclang1 libclang-dev mc vim screen
-RUN apt-get install -y openjdk-8-jre
+RUN apt-get clean && apt-get update && apt-get install -y build-essential g++ curl libssl-dev git libxml2-dev sshfs make autoconf automake libtool gcc g++ gperf flex bison texinfo gawk ncurses-dev libexpat-dev python sed python-serial srecord bc wget llvm libclang1 libclang-dev vim screen
 
 # ------------------------------------------------------------------------------
 # Install Supervisor.
@@ -28,12 +27,6 @@ ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 
 # ------------------------------------------------------------------------------
-# Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
-RUN apt-get install -y nodejs
-
-
-# ------------------------------------------------------------------------------
 # Versions
 ENV VERSION="0.7"
 ENV SDK_VERSION "1.5.4"
@@ -42,14 +35,6 @@ ENV SPIFFY_VERSION "1.0.4"
 
 LABEL description="version: ${VERSION}\nsdk: ${SDK_VERSION}\nspiffy: ${SPIFFY_VERSION}"
 LABEL release_notes="Update for Sming PR#148"
-
-# ------------------------------------------------------------------------------
-# Install yuicompressor
-WORKDIR /tmp
-RUN wget https://github.com/yui/yuicompressor/releases/download/v2.4.8/yuicompressor-2.4.8.jar
-RUN mv /tmp/yuicompressor-2.4.8.jar /usr/local/share/
-RUN echo "java -jar /usr/local/share/yuicompressor-2.4.8.jar \"\$@\"" > /usr/local/bin/yuicompressor
-RUN chmod 755 /usr/local/bin/yuicompressor
 
 # ------------------------------------------------------------------------------
 # Install spiffy
@@ -70,13 +55,6 @@ WORKDIR /opt/esp-open-sdk/esptool
 #RUN mv esptool.py esptool.py_orig
 RUN wget https://raw.githubusercontent.com/nodemcu/nodemcu-firmware/master/tools/esptool.py
 RUN chmod +rx esptool.py
-
-# ------------------------------------------------------------------------------
-# Install Cloud9
-RUN git clone https://github.com/c9/core.git /opt/cloud9
-WORKDIR /opt/cloud9
-RUN scripts/install-sdk.sh
-RUN npm install
 
 # Tweak standlone.js conf
 RUN sed -i -e 's_127.0.0.1_0.0.0.0_g' /opt/cloud9/configs/standalone.js 
